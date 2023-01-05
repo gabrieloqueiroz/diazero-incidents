@@ -1,15 +1,21 @@
 package br.com.diazero.incidents.spring.service.impl;
 
+import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.entity.Incidents;
 import br.com.diazero.incidents.spring.repository.IncidentsRepository;
 import br.com.diazero.incidents.spring.service.IncidentsService;
+import br.com.diazero.incidents.spring.util.AbstractEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static br.com.diazero.incidents.spring.util.AbstractEntity.toIncidentDetailsDto;
+import static br.com.diazero.incidents.spring.util.AbstractEntity.toIncidentDto;
 
 @Service
 public class IncidentsServiceImpl implements IncidentsService {
@@ -33,9 +39,15 @@ public class IncidentsServiceImpl implements IncidentsService {
 
         return incidents
                 .stream()
-                .map(incident ->
-                        mapper.map(incident, IncidentsDto.class)
-                )
+                .map(AbstractEntity::toIncidentDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public IncidentsDetailsDto getIncidentsById(Long id) {
+        Incidents incident = incidentsRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
+
+        return toIncidentDetailsDto(incident);
     }
 }

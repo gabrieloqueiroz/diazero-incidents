@@ -6,6 +6,7 @@ import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.entity.Incidents;
 import br.com.diazero.incidents.spring.domain.enuns.Status;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
+import br.com.diazero.incidents.spring.exception.BusinessRuleException;
 import br.com.diazero.incidents.spring.repository.IncidentsRepository;
 import br.com.diazero.incidents.spring.service.IncidentsService;
 import br.com.diazero.incidents.spring.util.AbstractEntity;
@@ -34,7 +35,7 @@ public class IncidentsServiceImpl implements IncidentsService {
         List<Incidents> incidents = incidentsRepository.findAll();
 
         if (incidents.isEmpty()){
-            throw new RuntimeException();
+            throw new BusinessRuleException("incidents not found");
         }
 
         return incidents
@@ -45,13 +46,12 @@ public class IncidentsServiceImpl implements IncidentsService {
     @Override
     public IncidentsDetailsDto getIncidentsById(Long id) {
         Incidents incident = incidentsRepository.findById(id)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new BusinessRuleException("Register not found"));
 
         return toIncidentDetailsDto(incident);
     }
 
     @Override
-    @Transactional
     public IncidentsCreatedDto createIncident(IncidentVo incident) {
         Incidents incidents = toIncidentsEntity(incident);
         incidents.setCreatedAt(LocalDateTime.now());
@@ -72,7 +72,7 @@ public class IncidentsServiceImpl implements IncidentsService {
         List<Incidents> lastIncidents = incidentsRepository.findFirst20OByOrderByCreatedAtDesc();
 
         if (lastIncidents.isEmpty()){
-            throw new RuntimeException();
+            throw new BusinessRuleException("incidents not found");
         }
 
         return lastIncidents

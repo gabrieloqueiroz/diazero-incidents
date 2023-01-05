@@ -5,19 +5,17 @@ import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.service.IncidentsService;
-import br.com.diazero.incidents.spring.util.ConstantsUtils;
-import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static br.com.diazero.incidents.spring.util.ConstantsUtils.INCIDENTS_SERVICE;
-import static br.com.diazero.incidents.spring.util.ConstantsUtils.PATH_SEPARATOR;
+import static br.com.diazero.incidents.spring.util.ConstantsUtils.*;
 
 @RestController
 @RequestMapping(PATH_SEPARATOR + INCIDENTS_SERVICE)
@@ -44,7 +42,7 @@ public class IncidentsController {
         return ResponseEntity.ok(incident);
     }
 
-    @GetMapping(PATH_SEPARATOR + ConstantsUtils.LAST_INCIDENTS)
+    @GetMapping(PATH_SEPARATOR + LAST_INCIDENTS)
     public ResponseEntity<List<IncidentsDto>> getLastsIncidents(){
         List<IncidentsDto> lastIncidents = incidentsService.getLastIncidents();
 
@@ -52,6 +50,7 @@ public class IncidentsController {
     }
 
     @PostMapping("/create")
+    @Transactional
     public ResponseEntity<IncidentsCreatedDto> createIncident(@RequestBody @Valid IncidentVo incident, UriComponentsBuilder componentsBuilder){
         IncidentsCreatedDto savedIncident = incidentsService.createIncident(incident);
 

@@ -1,11 +1,10 @@
 package br.com.diazero.incidents.spring.domain.entity;
 
 import br.com.diazero.incidents.spring.domain.enuns.Status;
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
+import org.springframework.lang.Nullable;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data

@@ -9,14 +9,12 @@ import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.repository.IncidentsRepository;
 import br.com.diazero.incidents.spring.service.IncidentsService;
 import br.com.diazero.incidents.spring.util.AbstractEntity;
-import jakarta.transaction.Transactional;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static br.com.diazero.incidents.spring.util.AbstractEntity.*;

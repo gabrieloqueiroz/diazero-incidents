@@ -11,4 +11,5 @@ public class SelfConfiguration {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
+
 }

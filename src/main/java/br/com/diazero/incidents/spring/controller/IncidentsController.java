@@ -5,13 +5,12 @@ import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.service.IncidentsService;
-import br.com.diazero.incidents.spring.util.ConstantsUtils;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class IncidentsController {
         return ResponseEntity.ok(incident);
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<IncidentsCreatedDto> createIncident(@RequestBody @Valid IncidentVo incident, UriComponentsBuilder componentsBuilder){
         IncidentsCreatedDto savedIncident = incidentsService.createIncident(incident);
 

@@ -14,4 +14,8 @@ public interface IncidentsService {
     IncidentsDetailsDto getIncidentsById(Long id);
 
     IncidentsCreatedDto createIncident(IncidentVo incident);
+
+    void deleteIncident(Long id);
+
+    List<IncidentsDto> getLastIncidents();
 }

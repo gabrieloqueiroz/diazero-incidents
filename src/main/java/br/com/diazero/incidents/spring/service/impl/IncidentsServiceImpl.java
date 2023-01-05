@@ -61,4 +61,23 @@ public class IncidentsServiceImpl implements IncidentsService {
 
         return toIncidentCreatedDto(savedIncident);
     }
+
+    @Override
+    public void deleteIncident(Long id) {
+        incidentsRepository.deleteById(id);
+    }
+
+    @Override
+    public List<IncidentsDto> getLastIncidents() {
+        List<Incidents> lastIncidents = incidentsRepository.findFirst20OByOrderByCreatedAtDesc();
+
+        if (lastIncidents.isEmpty()){
+            throw new RuntimeException();
+        }
+
+        return lastIncidents
+                .stream()
+                .map(AbstractEntity::toIncidentDto)
+                .collect(Collectors.toList());
+    }
 }

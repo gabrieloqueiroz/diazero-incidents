@@ -5,6 +5,8 @@ import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.service.IncidentsService;
+import br.com.diazero.incidents.spring.util.ConstantsUtils;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +44,13 @@ public class IncidentsController {
         return ResponseEntity.ok(incident);
     }
 
+    @GetMapping(PATH_SEPARATOR + ConstantsUtils.LAST_INCIDENTS)
+    public ResponseEntity<List<IncidentsDto>> getLastsIncidents(){
+        List<IncidentsDto> lastIncidents = incidentsService.getLastIncidents();
+
+        return ResponseEntity.ok(lastIncidents);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<IncidentsCreatedDto> createIncident(@RequestBody @Valid IncidentVo incident, UriComponentsBuilder componentsBuilder){
         IncidentsCreatedDto savedIncident = incidentsService.createIncident(incident);
@@ -49,5 +58,12 @@ public class IncidentsController {
         URI uri = componentsBuilder.path(PATH_SEPARATOR + INCIDENTS_SERVICE + "{id}").buildAndExpand(savedIncident.getId()).toUri();
 
         return ResponseEntity.created(uri).body(savedIncident);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteIncident(@PathVariable Long id){
+        incidentsService.deleteIncident(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

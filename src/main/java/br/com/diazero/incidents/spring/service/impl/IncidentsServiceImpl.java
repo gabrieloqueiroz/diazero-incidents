@@ -3,17 +3,18 @@ package br.com.diazero.incidents.spring.service.impl;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsCreatedDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
+import br.com.diazero.incidents.spring.domain.entity.Comments;
 import br.com.diazero.incidents.spring.domain.entity.Incidents;
 import br.com.diazero.incidents.spring.domain.enuns.Status;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.exception.BusinessRuleException;
+import br.com.diazero.incidents.spring.repository.CommentsRepository;
 import br.com.diazero.incidents.spring.repository.IncidentsRepository;
 import br.com.diazero.incidents.spring.service.IncidentsService;
 import br.com.diazero.incidents.spring.util.AbstractEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,10 +25,12 @@ import static br.com.diazero.incidents.spring.util.AbstractEntity.*;
 public class IncidentsServiceImpl implements IncidentsService {
 
     private IncidentsRepository incidentsRepository;
+    private CommentsRepository commentsRepository;
 
     @Autowired
-    public IncidentsServiceImpl(IncidentsRepository incidentsRepository) {
+    public IncidentsServiceImpl(IncidentsRepository incidentsRepository, CommentsRepository commentsRepository) {
         this.incidentsRepository = incidentsRepository;
+        this.commentsRepository = commentsRepository;
     }
 
     @Override
@@ -45,9 +48,7 @@ public class IncidentsServiceImpl implements IncidentsService {
     }
     @Override
     public IncidentsDetailsDto getIncidentsById(Long id) {
-        Incidents incident = incidentsRepository.findById(id)
-                .orElseThrow(() -> new BusinessRuleException("Register not found"));
-
+        Incidents incident = getIncidentEntityById(id);
         return toIncidentDetailsDto(incident);
     }
 
@@ -63,11 +64,6 @@ public class IncidentsServiceImpl implements IncidentsService {
     }
 
     @Override
-    public void deleteIncident(Long id) {
-        incidentsRepository.deleteById(id);
-    }
-
-    @Override
     public List<IncidentsDto> getLastIncidents() {
         List<Incidents> lastIncidents = incidentsRepository.findFirst20OByOrderByCreatedAtDesc();
 
@@ -79,5 +75,28 @@ public class IncidentsServiceImpl implements IncidentsService {
                 .stream()
                 .map(AbstractEntity::toIncidentDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public IncidentsDetailsDto updateIncident(Long id, String comments) {
+        Incidents incident = getIncidentEntityById(id);
+        Comments newComment = new Comments(comments, incident);
+        commentsRepository.save(newComment);
+        List<Comments> commentsById = commentsRepository.findByIncidentId(incident.getId());
+        incident.setComments(commentsById);
+
+        Incidents savedIncident = incidentsRepository.saveAndFlush(incident);
+
+        return toIncidentDetailsDto(savedIncident);
+    }
+
+    @Override
+    public void deleteIncident(Long id) {
+        incidentsRepository.deleteById(id);
+    }
+
+    private Incidents getIncidentEntityById(Long id){
+        return incidentsRepository.findById(id)
+                .orElseThrow(() -> new BusinessRuleException("Register not found"));
     }
 }

@@ -1,14 +1,21 @@
 package br.com.diazero.incidents.spring.domain.entity;
 
 import br.com.diazero.incidents.spring.domain.enuns.Status;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "incidents")
 public class Incidents {
 
@@ -24,4 +31,6 @@ public class Incidents {
     private LocalDateTime updatedAt;
     @Nullable
     private LocalDateTime closedAt;
+    @OneToMany(mappedBy = "incident")
+    private List<Comments> comments = new ArrayList<>();
 }

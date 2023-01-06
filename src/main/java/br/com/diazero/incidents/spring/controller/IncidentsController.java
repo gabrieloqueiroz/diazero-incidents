@@ -35,7 +35,7 @@ public class IncidentsController {
         return ResponseEntity.ok(allIncidents);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(PATH_SEPARATOR + PATH_ID)
     public ResponseEntity<IncidentsDetailsDto> getIncidentById(@PathVariable Long id){
         IncidentsDetailsDto incident = incidentsService.getIncidentsById(id);
 
@@ -54,12 +54,19 @@ public class IncidentsController {
     public ResponseEntity<IncidentsCreatedDto> createIncident(@RequestBody @Valid IncidentVo incident, UriComponentsBuilder componentsBuilder){
         IncidentsCreatedDto savedIncident = incidentsService.createIncident(incident);
 
-        URI uri = componentsBuilder.path(PATH_SEPARATOR + INCIDENTS_SERVICE + "{id}").buildAndExpand(savedIncident.getId()).toUri();
+        URI uri = componentsBuilder.path(PATH_SEPARATOR + INCIDENTS_SERVICE + PATH_ID).buildAndExpand(savedIncident.getId()).toUri();
 
         return ResponseEntity.created(uri).body(savedIncident);
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping(PATH_SEPARATOR + PATH_ID)
+    @Transactional
+    public ResponseEntity<IncidentsDetailsDto> updateIncident(@PathVariable Long id, @RequestBody String comments){
+        IncidentsDetailsDto savedIncident = incidentsService.updateIncident(id, comments);
+        return ResponseEntity.ok(savedIncident);
+    }
+
+    @DeleteMapping(PATH_SEPARATOR + PATH_ID)
     public ResponseEntity<?> deleteIncident(@PathVariable Long id){
         incidentsService.deleteIncident(id);
 

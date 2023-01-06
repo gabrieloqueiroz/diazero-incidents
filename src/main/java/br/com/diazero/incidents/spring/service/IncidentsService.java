@@ -18,4 +18,6 @@ public interface IncidentsService {
     void deleteIncident(Long id);
 
     List<IncidentsDto> getLastIncidents();
+
+    IncidentsDetailsDto updateIncident(Long id, String comments);
 }

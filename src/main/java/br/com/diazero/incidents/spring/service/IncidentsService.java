@@ -20,4 +20,6 @@ public interface IncidentsService {
     List<IncidentsDto> getLastIncidents();
 
     IncidentsDetailsDto updateIncident(Long id, String comments);
+
+    IncidentsDetailsDto updateStatusIncident(Long id);
 }

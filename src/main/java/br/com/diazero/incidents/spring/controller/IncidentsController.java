@@ -5,7 +5,9 @@ import br.com.diazero.incidents.spring.domain.dto.IncidentsDetailsDto;
 import br.com.diazero.incidents.spring.domain.dto.IncidentsDto;
 import br.com.diazero.incidents.spring.domain.vo.IncidentVo;
 import br.com.diazero.incidents.spring.service.IncidentsService;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -59,11 +61,18 @@ public class IncidentsController {
         return ResponseEntity.created(uri).body(savedIncident);
     }
 
-    @PatchMapping(PATH_SEPARATOR + PATH_ID)
+    @PatchMapping(value = PATH_SEPARATOR + PATH_ID, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<IncidentsDetailsDto> updateIncident(@PathVariable Long id, @RequestBody String comments){
         IncidentsDetailsDto savedIncident = incidentsService.updateIncident(id, comments);
         return ResponseEntity.ok(savedIncident);
+    }
+
+    @PutMapping(PATH_SEPARATOR + PATH_ID)
+    public ResponseEntity<IncidentsDetailsDto> updateStatusIncident(@PathVariable Long id){
+        IncidentsDetailsDto updatedIncident = incidentsService.updateStatusIncident(id);
+
+        return ResponseEntity.ok(updatedIncident);
     }
 
     @DeleteMapping(PATH_SEPARATOR + PATH_ID)

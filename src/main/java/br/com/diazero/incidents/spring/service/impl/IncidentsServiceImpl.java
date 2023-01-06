@@ -37,7 +37,7 @@ public class IncidentsServiceImpl implements IncidentsService {
     public List<IncidentsDto> getAllIncidents() {
         List<Incidents> incidents = incidentsRepository.findAll();
 
-        if (incidents.isEmpty()){
+        if (incidents.isEmpty()) {
             throw new BusinessRuleException("incidents not found");
         }
 
@@ -46,6 +46,7 @@ public class IncidentsServiceImpl implements IncidentsService {
                 .map(AbstractEntity::toIncidentDto)
                 .collect(Collectors.toList());
     }
+
     @Override
     public IncidentsDetailsDto getIncidentsById(Long id) {
         Incidents incident = getIncidentEntityById(id);
@@ -67,7 +68,7 @@ public class IncidentsServiceImpl implements IncidentsService {
     public List<IncidentsDto> getLastIncidents() {
         List<Incidents> lastIncidents = incidentsRepository.findFirst20OByOrderByCreatedAtDesc();
 
-        if (lastIncidents.isEmpty()){
+        if (lastIncidents.isEmpty()) {
             throw new BusinessRuleException("incidents not found");
         }
 
@@ -80,10 +81,14 @@ public class IncidentsServiceImpl implements IncidentsService {
     @Override
     public IncidentsDetailsDto updateIncident(Long id, String comments) {
         Incidents incident = getIncidentEntityById(id);
+
         Comments newComment = new Comments(comments, incident);
         commentsRepository.save(newComment);
+
         List<Comments> commentsById = commentsRepository.findByIncidentId(incident.getId());
+
         incident.setComments(commentsById);
+        incident.setUpdatedAt(LocalDateTime.now());
 
         Incidents savedIncident = incidentsRepository.saveAndFlush(incident);
 
@@ -91,11 +96,30 @@ public class IncidentsServiceImpl implements IncidentsService {
     }
 
     @Override
+    public IncidentsDetailsDto updateStatusIncident(Long id) {
+        Incidents incident = getIncidentEntityById(id);
+
+        Status newStatus = (incident.getStatus().equals(Status.OPEN)) ?
+                Status.CLOSED : Status.OPEN;
+
+        incident.setStatus(newStatus);
+
+        if (newStatus.equals(Status.CLOSED)) {
+            incident.setClosedAt(LocalDateTime.now());
+        }
+
+        Incidents updatedIncident = incidentsRepository.save(incident);
+
+        return toIncidentDetailsDto(updatedIncident);
+    }
+
+    @Override
     public void deleteIncident(Long id) {
+        commentsRepository.deleteByIncidentId(id);
         incidentsRepository.deleteById(id);
     }
 
-    private Incidents getIncidentEntityById(Long id){
+    private Incidents getIncidentEntityById(Long id) {
         return incidentsRepository.findById(id)
                 .orElseThrow(() -> new BusinessRuleException("Register not found"));
     }

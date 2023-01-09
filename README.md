@@ -7,10 +7,10 @@ Application with the functionality to follow the entire flow of incidents, from 
 
 ## RUNNING
 
-> * Run in your IDE 'mvn clean package'
+> * Run in your IDE or terminal 'mvn clean package'
 > * Download Docker in https://www.docker.com/products/docker-desktop/
 > * Open the terminal in the root directory ( /diazero-incidents )
-> * run command 'docker-compose up'
+> * With docker running locally, follow the command 'docker-compose up'
 
 ## TECHNOLOGIES
 

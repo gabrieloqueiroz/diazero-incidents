@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  incidents:
+    build: ./
+    container_name: incidents
+    restart: always
+    volumes:
+      - ./incidents:/home/incidents/app
+    ports:
+      - "8091:8091"

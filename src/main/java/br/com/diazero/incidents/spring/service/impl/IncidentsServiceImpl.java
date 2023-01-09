@@ -79,7 +79,7 @@ public class IncidentsServiceImpl implements IncidentsService {
     }
 
     @Override
-    public IncidentsDetailsDto updateIncident(Long id, String comments) {
+    public IncidentsDetailsDto  updateIncident(Long id, String comments) {
         Incidents incident = getIncidentEntityById(id);
 
         Comments newComment = new Comments(comments, incident);

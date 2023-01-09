@@ -19,3 +19,5 @@ INSERT INTO INCIDENTS (name, description, status, created_at, updated_at) VALUES
 INSERT INTO INCIDENTS (name, description, status, created_at, updated_at) VALUES ('user19', 'incident with micro services', 'OPEN', '2023-02-03 17:00:00', '2023-01-04 19:39:00');
 INSERT INTO INCIDENTS (name, description, status, created_at, updated_at) VALUES ('user20', 'incident with micro services', 'OPEN', '2023-02-04 17:00:00', '2023-01-04 19:39:00');
 INSERT INTO INCIDENTS (name, description, status, created_at, updated_at) VALUES ('user21', 'incident with micro services', 'OPEN', '2023-03-04 17:00:00', '2023-01-04 19:39:00');
+
+INSERT INTO COMMENTS(comment, created_at, incident_id) VALUES ('New comment to test endpoint include comments','2023-03-04 17:00:00','21' )
